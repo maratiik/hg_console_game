@@ -1,6 +1,7 @@
 class Room:
+
     '''
-    Class contains rooms and their neighbors.
+    Contains rooms and their neighbors
     '''
 
     def __init__(self, room_name):
@@ -8,41 +9,80 @@ class Room:
         self.neighbors = {}
 
 
+
 class Map:
+
     '''
-    Class contains one graph with rooms.
+    Class contains one graph with rooms
     '''
 
     def __init__(self):
         self.rooms = {}
+        self.loot = {}
+        self.entities = {}
 
-    def add_room(self, room_name):
+    def _add_room(self, room_name):
         '''
-        Add a room to the graph.
+        Add a room to the graph
         '''
         self.rooms[room_name] = Room(room_name)
+        self.loot[room_name] = []
+        self.entities[room_name] = []
 
-    def add_lock(self, room_name1, room_name2, locked):
+    def _add_lock(self, room_name1, room_name2, locked):
         '''
-        Add a lock to the door between rooms.
-        locked = 1 if door is locked,
+        Add a lock to the door between rooms
+        locked = 1 if door is locked
         locked = 0 if door is unlocked
         '''
         self.rooms[room_name1].neighbors[room_name2] = locked
         self.rooms[room_name2].neighbors[room_name1] = locked
 
+    def _check(self, room_name1, room_name2):
+        '''
+        Checks if the door is locked
+        '''
+        if room_name1 in self.rooms[room_name2].neighbors:
+            return self.rooms[room_name1].neighbors[room_name2]
+        else:
+            return None
 
-if __name__ == '__main__':
-    g = Map()
+    def _show_map(self):
+        '''
+        Print map
+        '''
+        for room in self.rooms:
+            print(f'{room}: {self.rooms[room].neighbors}')
 
-    g.add_room('Bedroom')
-    g.add_room('Hall')
-    g.add_room('Kitchen')
-    g.add_room('Bathroom')
+    def _add_loot(self, room, loot_id):
+        '''
+        Add loot to the room
+        '''
 
-    g.add_lock('Bedroom', 'Hall', 0)
-    g.add_lock('Hall', 'Kitchen', 0)
-    g.add_lock('Hall', 'Bathroom', 1)
+        self.loot[room].append(loot_id)
 
-    for room in g.rooms:
-        print(f'{room}: {g.rooms[room].neighbors}')
+    def _show_loot(self, room_name = None):
+        '''
+        Print loot
+        '''
+        if room_name == None:
+            print(self.loot)
+        else:
+            print(self.loot[room_name])
+
+    def _add_entity(self, room, entity_id, close):
+        '''
+        Add entity
+        '''
+
+        self.entities[room].append([entity_id, close])
+
+    def _show_entity(self, room_name = None):
+        '''
+        Print entity
+        '''
+
+        if room_name == None:
+            print(self.entities)
+        else:
+            print(self.entities[room_name])

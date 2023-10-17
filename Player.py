@@ -182,7 +182,7 @@ class Player():
 
 if __name__ == '__main__':
 
-    player = Player('Marik - losharik')
+    player = Player('Maratik')
     player.get_experience(5)
     player.get_talent('Fire aura')
     player.stats()
