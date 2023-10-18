@@ -4,8 +4,8 @@ class Room:
     Contains rooms and their neighbors
     '''
 
-    def __init__(self, room_name):
-        self.room_name = room_name
+    def __init__(self, room_id):
+        self.room_id = room_id
         self.neighbors = {}
 
 
@@ -21,30 +21,36 @@ class Map:
         self.loot = {}
         self.entities = {}
         self.location = ''
+        self.key_id = 1
 
-    def _add_room(self, room_name):
+    def _add_room(self, room_id):
         '''
         Add a room to the graph
         '''
-        self.rooms[room_name] = Room(room_name)
-        self.loot[room_name] = []
-        self.entities[room_name] = []
+        self.rooms[room_id] = Room(room_id)
+        self.loot[room_id] = []
+        self.entities[room_id] = []
 
-    def _add_lock(self, room_name1, room_name2, locked):
+    def _add_lock(self, room_id1, room_id2, locked = 0):
         '''
         Add a lock to the door between rooms
-        locked = 1 if door is locked
-        locked = 0 if door is unlocked
+        locked = 0 if door is unlocked (default)
+        locked = 1 if door is locked. In this case, unique id will be given to door
         '''
-        self.rooms[room_name1].neighbors[room_name2] = locked
-        self.rooms[room_name2].neighbors[room_name1] = locked
+        if locked == 0:
+            self.rooms[room_id1].neighbors[room_id2] = locked
+            self.rooms[room_id2].neighbors[room_id1] = locked
+        else:
+            self.rooms[room_id1].neighbors[room_id2] = self.key_id
+            self.rooms[room_id2].neighbors[room_id1] = self.key_id
+            self.key_id += 1
 
-    def _check(self, room_name1, room_name2):
+    def _check(self, room_id1, room_id2):
         '''
         Checks if the door is locked
         '''
-        if room_name1 in self.rooms[room_name2].neighbors:
-            return self.rooms[room_name1].neighbors[room_name2]
+        if room_id1 in self.rooms[room_id2].neighbors:
+            return self.rooms[room_id1].neighbors[room_id2]
         else:
             return None
 
@@ -52,66 +58,72 @@ class Map:
         '''
         Print map
         '''
-        for room in self.rooms:
-            print(f'{room}: {self.rooms[room].neighbors}')
+        for room_id in self.rooms:
+            print(f'{room_id}: {self.rooms[room_id].neighbors}')
 
-    def _add_loot(self, room, item_id):
+    def _add_loot(self, room_id, item_id):
         '''
         Add loot to the room
         '''
-        self.loot[room].append(item_id)
+        self.loot[room_id].append(item_id)
 
-    def _show_loot(self, room_name = None):
+        print(f'Item_{item_id} added to {room_id}.')
+
+    def _show_loot(self, room_id = None):
         '''
         Print loot
         '''
-        if room_name is None:
+        if room_id is None:
             print(self.loot)
         else:
-            print(self.loot[room_name])
+            print(self.loot[room_id])
 
-    def _add_entity(self, room, entity_id, close):
+    def _add_entity(self, room_id, entity_id, close):
         '''
         Add entity
         '''
-        self.entities[room].append([entity_id, close])
+        self.entities[room_id].append([entity_id, close])
 
-    def _show_entity(self, room_name = None):
+        print(f'Entity_{entity_id} added to {room_id}.')
+
+    def _show_entity(self, room_id = None):
         '''
         Print entity
         '''
-        if room_name is None:
+        if room_id is None:
             print(self.entities)
         else:
-            print(self.entities[room_name])
+            print(self.entities[room_id])
 
-    def _set_location(self, room_name):
+    def _set_location(self, room_id):
         '''
         Set location of the player
         '''
-        self.location = room_name
+        self.location = room_id
+
+        print(f'Location set to {room_id}.')
 
     def where(self):
         '''
         Print current room
         '''
-        print(self.location)
+        print(f'Current location is {self.location}.')
 
     def doors(self):
         '''
         Print doors in the current room
         '''
         neighbors = map(str, self.rooms[self.location].neighbors.keys())
-        print(f'{", ".join(neighbors)}')
+        print(f'Doors in current room lead to: {", ".join(neighbors)}.')
 
-    def move(self, room_name):
+    def move(self, room_id):
         '''
-        Moves to the room_name if door isn't locked
+        Moves to the room_id if door isn't locked
         '''
-        if self._check(self.location, room_name) is None:
-            print(f'{room_name} is not the next room!')
-        elif self._check(self.location, room_name) == 1:
-            ### add key_check to the room_name so that the door can be opened with the key.
-            print(f'Door to {room_name} is locked!')
+        if self._check(self.location, room_id) is None:
+            print(f'{room_id} is not the next room!')
+        elif self._check(self.location, room_id) == 1:
+            ### add key_check to the room_id so that the door can be opened with the key.
+            print(f'Door to {room_id} is locked!')
         else:
-            self._set_location(room_name)
+            self._set_location(room_id)

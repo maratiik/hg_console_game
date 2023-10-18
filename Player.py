@@ -103,6 +103,8 @@ class Player():
         self.loot.remove(item_id)
 
 
+
+
 if __name__ == '__main__':
 
     player = Player('Marik')
