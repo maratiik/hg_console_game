@@ -20,6 +20,7 @@ class Map:
         self.rooms = {}
         self.loot = {}
         self.entities = {}
+        self.location = ''
 
     def _add_room(self, room_name):
         '''
@@ -54,18 +55,17 @@ class Map:
         for room in self.rooms:
             print(f'{room}: {self.rooms[room].neighbors}')
 
-    def _add_loot(self, room, loot_id):
+    def _add_loot(self, room, item_id):
         '''
         Add loot to the room
         '''
-
-        self.loot[room].append(loot_id)
+        self.loot[room].append(item_id)
 
     def _show_loot(self, room_name = None):
         '''
         Print loot
         '''
-        if room_name == None:
+        if room_name is None:
             print(self.loot)
         else:
             print(self.loot[room_name])
@@ -74,15 +74,44 @@ class Map:
         '''
         Add entity
         '''
-
         self.entities[room].append([entity_id, close])
 
     def _show_entity(self, room_name = None):
         '''
         Print entity
         '''
-
-        if room_name == None:
+        if room_name is None:
             print(self.entities)
         else:
             print(self.entities[room_name])
+
+    def _set_location(self, room_name):
+        '''
+        Set location of the player
+        '''
+        self.location = room_name
+
+    def where(self):
+        '''
+        Print current room
+        '''
+        print(self.location)
+
+    def doors(self):
+        '''
+        Print doors in the current room
+        '''
+        neighbors = map(str, self.rooms[self.location].neighbors.keys())
+        print(f'{", ".join(neighbors)}')
+
+    def move(self, room_name):
+        '''
+        Moves to the room_name if door isn't locked
+        '''
+        if self._check(self.location, room_name) is None:
+            print(f'{room_name} is not the next room!')
+        elif self._check(self.location, room_name) == 1:
+            ### add key_check to the room_name so that the door can be opened with the key.
+            print(f'Door to {room_name} is locked!')
+        else:
+            self._set_location(room_name)
