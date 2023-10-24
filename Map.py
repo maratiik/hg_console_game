@@ -22,21 +22,21 @@ class Map:
         self.entities = {}
         self.location = ''
 
-    def _add_room(self, room_id):
+    def _add_room(self, room):
         '''
         Add a room to the graph
         '''
-        self.rooms[room_id] = Room(room_id)
-        self.loot[room_id] = []
-        self.entities[room_id] = []
+        self.rooms[room] = Room(room)
+        self.loot[room] = []
+        self.entities[room] = []
 
-    def _add_lock(self, room_id1, room_id2, locked = 0):
+    def _add_lock(self, room1, room2, locked = 0):
         '''
         Add a lock to the door between rooms
         locked = 0 if door is unlocked (default)
         locked = 1 if door is locked.
         '''
-        self.rooms[room_id1].neighbors[room_id2] = locked
+        self.rooms[room1].neighbors[room2] = locked
 
         # Add key_ids as graph edges
         #if locked == 0:
@@ -51,5 +51,19 @@ class Map:
         '''
         Print map
         '''
-        for room_id in self.rooms:
-            print(f'{room_id}: {self.rooms[room_id].neighbors}')
+        for room in self.rooms:
+            print(f'{room}: {self.rooms[room].neighbors}')
+
+if __name__ == '__main__':
+    g = Map()
+
+    g._add_room('Bedroom')
+    g._add_room('Hall')
+    g._add_room('Kitchen')
+    g._add_room('Bathroom')
+
+    g._add_lock('Bedroom', 'Hall', 0)
+    g._add_lock('Hall', 'Kitchen', 1)
+    g._add_lock('Hall', 'Bathroom', 1)
+
+    g._show_map()

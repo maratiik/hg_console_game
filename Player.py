@@ -1,3 +1,5 @@
+from Map import Room, Map
+
 class Player():
     '''
     Class contains Player's actions and information about their location.
@@ -12,4 +14,8 @@ class Player():
 
         print(f'Welcome to the world, {self.name}')
 
-    def move(self, location):
+    def move(self, room):
+        '''
+        Moves to the room if neighbor
+        '''
+        if
