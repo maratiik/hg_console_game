@@ -19,8 +19,7 @@ class Map:
     def __init__(self):
         self.rooms = {}
         self.loot = {}
-        self.entities = {}
-        self.location = ''
+        self.npcs = {}
 
     def _add_room(self, room):
         '''
@@ -28,7 +27,7 @@ class Map:
         '''
         self.rooms[room] = Room(room)
         self.loot[room] = []
-        self.entities[room] = []
+        self.npcs[room] = []
 
     def _add_lock(self, room1, room2, locked = 0):
         '''
@@ -53,19 +52,3 @@ class Map:
         '''
         for room in self.rooms:
             print(f'{room}: {self.rooms[room].neighbors}')
-
-if __name__ == '__main__':
-    game_map = Map()
-
-    game_map._add_room('Bedroom')
-    game_map._add_room('Hall')
-    game_map._add_room('Kitchen')
-    game_map._add_room('Bathroom')
-
-    game_map._add_lock('Bedroom', 'Hall', 0)
-    game_map._add_lock('Hall', 'Kitchen', 1)
-    game_map._add_lock('Hall', 'Bathroom', 1)
-
-    game_map._show_map()
-
-    player = Player('name', game_map)
