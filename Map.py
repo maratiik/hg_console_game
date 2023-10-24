@@ -55,15 +55,17 @@ class Map:
             print(f'{room}: {self.rooms[room].neighbors}')
 
 if __name__ == '__main__':
-    g = Map()
+    game_map = Map()
 
-    g._add_room('Bedroom')
-    g._add_room('Hall')
-    g._add_room('Kitchen')
-    g._add_room('Bathroom')
+    game_map._add_room('Bedroom')
+    game_map._add_room('Hall')
+    game_map._add_room('Kitchen')
+    game_map._add_room('Bathroom')
 
-    g._add_lock('Bedroom', 'Hall', 0)
-    g._add_lock('Hall', 'Kitchen', 1)
-    g._add_lock('Hall', 'Bathroom', 1)
+    game_map._add_lock('Bedroom', 'Hall', 0)
+    game_map._add_lock('Hall', 'Kitchen', 1)
+    game_map._add_lock('Hall', 'Bathroom', 1)
 
-    g._show_map()
+    game_map._show_map()
+
+    player = Player('name', game_map)
