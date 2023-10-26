@@ -1,34 +1,34 @@
 from Map import Room, Map
 from Player import Player
-from NPC import NPC
+from NPC import NPC, Warrior
 from Item import Item
-g = Map()
 
-g._add_room('Bedroom')
-g._add_room('Hall')
-g._add_room('Kitchen')
-g._add_room('Bathroom')
+game_map = Map()
 
-g._add_lock('Bedroom', 'Hall', 0)
-g._add_lock('Hall', 'Kitchen', 1)
-g._add_lock('Hall', 'Bathroom', 1)
+game_map._add_room('Bedroom')
+game_map._add_room('Hall')
+game_map._add_room('Kitchen')
+game_map._add_room('Bathroom')
 
-g._show_map()
+game_map._add_lock('Bedroom', 'Hall', 0)
+game_map._add_lock('Hall', 'Kitchen', 1)
+game_map._add_lock('Hall', 'Bathroom', 1)
 
-player = Player('Maratik', g)
+player = Player('Maratik', game_map)
 player.location = 'Hall'
-
-Ogre = NPC(1, 'Ogre', -100)
-g.npcs['Hall'].append(Ogre)
-
-Ogre.location = 'Hall'
 
 Ogre_flesh = Item(1, 'Ogre Flesh')
 Bone = Item(2, 'Bone')
-player.loot.append(Ogre_flesh)
-player.loot.append(Bone)
 
+Ogre = Warrior('Ogre', -100, game_map)
+Ogre.loot = [Ogre_flesh, Bone]
+Ogre._set_location('Hall')
+
+player.take_item(Bone)
 player.inventory()
-
-player.drop_item(Bone)
 player.show_loot()
+
+player.interact(Ogre)
+player.show_loot()
+
+print(game_map.npcs['Hall'])
