@@ -52,5 +52,3 @@ class Map:
         '''
         for room in self.rooms:
             print(f'{room}: {self.rooms[room].neighbors}')
-
-############ Game map ############

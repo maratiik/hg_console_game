@@ -1,4 +1,7 @@
 class Item:
-    def __init__(self, item_id, name):
-        self.id = item_id
+    id_counter = 0
+    def __init__(self, name):
+        self.id = type(self).id_counter
         self.name = name
+
+        type(self).id_counter += 1

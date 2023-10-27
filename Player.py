@@ -12,11 +12,17 @@ class Player():
         self.karma = 0
         self.game_map = game_map
 
-        self.health = 3
+        self.max_hp = 3
+        self.hp = self.max_hp
         self.damage = 1
         self.protectiveness = 0
         self.crit_chance = 0
         self.crit_damage = 0
+
+        self.level = 1
+        self.xp = 0
+        self.xp_to_level_up = 3
+        self.talent_points = 0
 
         print(f'Welcome to the world, {self.name}\n')
 
@@ -56,10 +62,12 @@ class Player():
         '''
         Attack npc
         '''
+        self.karma -= npc.karma // 2
+
         crit = 0
 
         player_damage = self.damage + crit
-        player_health = self.health + self.protectiveness
+        player_health = self.hp + self.protectiveness
 
         print(f'{self.name} fights {npc.name}!')
         while player_health > 0 and npc.health > 0:
@@ -68,7 +76,7 @@ class Player():
                 print('Critial strike!')
 
             player_damage = self.damage + crit
-            player_health = self.health + self.protectiveness
+            player_health = self.hp + self.protectiveness
 
             npc.health -= player_damage
             player_health -= npc.damage
@@ -78,9 +86,7 @@ class Player():
         if npc.health <= 0:
             print(f'You have won {npc.name}')
             npc._die()
-
-
-
+            self.add_xp(npc.damage + 1)
 
     def show_loot(self):
         '''
@@ -128,3 +134,25 @@ class Player():
             self.game_map.loot[self.location].remove(item)
         else:
             print(f'No such item in {self.location}\n')
+
+    def add_xp(self, xp):
+        '''
+        Add experience points
+        '''
+        self.xp += xp
+        while self.xp >= self.xp_to_level_up:
+            self.xp -= self.xp_to_level_up
+            self.level_up()
+
+    def level_up(self):
+        '''
+        Level up protocol
+        '''
+        self.level += 1
+        self.max_hp += 1
+        self.hp = self.max_hp
+        self.damage += 1
+        self.protectiveness += 1
+        self.talent_points += 1
+
+        print(f'You reached level {self.level}!')

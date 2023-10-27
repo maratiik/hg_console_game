@@ -30,7 +30,6 @@ class NPC:
         If player kills npc, his karma -= int(npc karma * coefficient)
         '''
         print(f'NPC fights you back!')
-
         player.fight(self)
 
     def _die(self):
