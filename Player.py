@@ -1,11 +1,12 @@
 import random
 
+KARMA_GAP = 100 # difference in karma when npcs start attack player
+
 class Player():
     '''
     Class contains Player's actions and information about their location.
     '''
     def __init__(self, player_name, game_map):
-
         self.name = player_name
         self.loot = []
         self.location = ''
@@ -54,7 +55,11 @@ class Player():
         Interact with npc
         '''
         if self.location == npc.location:
-            npc._interact(self)
+            if abs(self.karma - npc.karma) >= KARMA_GAP:
+                print('FIGHT!')
+                self.fight(npc)
+            else:
+                npc._talk(self)
         else:
             print('Shizoid????')
 
@@ -156,3 +161,65 @@ class Player():
         self.talent_points += 1
 
         print(f'You reached level {self.level}!')
+
+
+
+class Talents:
+    '''
+    Contains talents and their buffs
+    '''
+    def __init__(self):
+        self.fire_aura = 0
+        self.fire_aura_name = 'Fire aura'
+        self.fire_aura_description = 'Adds a fire aura to the weapons, increasing damage'
+
+        self.shield = 0
+        self.shield_name = 'Shield'
+        self.shield_description = 'Reduces incoming damage'
+        self.absorption = 0
+        self.absorption_name = 'Absorption'
+        self.absorption_description = 'Creates a chance to not get incoming damage for an enemy'
+
+        self.technic = 0
+        self.technic_name = 'Technic'
+        self.technic_description = 'Better weapon control, increases damage'
+        self.chaos_slice = 0
+        self.chaos_slice_name = 'Chaos slice'
+        self.chaos_slice_description = 'Increases critical damage'
+        self.chaos_chance = 0
+        self.chaos_chance_name = 'Chaos chance'
+        self.chaos_chance_description = 'Increases chance to strike critical damage'
+
+        self.potency = 0
+        self.potency_name = 'Tolerance'
+        self.potency_description = 'Adds a buff to potions'
+
+        self.branches = ['Fire', 'Shield', 'Weapon mastering', 'Potions']
+
+    def show_talent_tree(self, branch = None):
+        '''
+        Prints talent tree
+        '''
+        if branch == None:
+            print('------'.join(self.branches))
+            print('Choose branch in parameters to see talents.')
+        elif branch == self.branches[0]:
+            print(f'---{self.branches[0]}---')
+            print(f'{self.fire_aura_name}: {self.fire_aura} - {self.fire_aura_description}')
+        elif branch == self.branches[1]:
+            print(f'---{self.branches[1]}---')
+            print(f'{self.shield_name}: {self.shield} - {self.shield_description}')
+            print(f'{self.absorption_name}: {self.absorption} - {self.absorption_description}')
+        elif branch == self.branches[2]:
+            print(f'---{self.branches[2]}---')
+            print(f'{self.technic_name}: {self.technic} - {self.technic_description}')
+            print(f'{self.chaos_slice_name}: {self.chaos_slice} - {self.chaos_slice_description}')
+            print(f'{self.chaos_chance_name}: {self.chaos_chance} - {self.chaos_chance_description}')
+        elif branch == self.branches[3]:
+            print(f'---{self.branches[3]}---')
+            print(f'{self.potency_name}: {self.potency} - {self.potency_description}')
+
+if __name__ == '__main__':
+    a = Talents()
+    a.show_talent_tree()
+    a.show_talent_tree(branch='Weapon mastering')

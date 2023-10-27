@@ -1,5 +1,3 @@
-KARMA_GAP = 100 # difference in karma when npc start attack player
-
 class NPC:
     '''
     Class contains basic information about NPCs
@@ -13,24 +11,6 @@ class NPC:
         self.health = 0 # health of NPC
         self.damage = 0 # damage of NPC
         print('NPC has arrived!\n')
-
-    def _interact(self, player):
-        '''
-        Compare karma, talk if ok, attack if not
-        '''
-        if abs(self.karma - player.karma) >= KARMA_GAP:
-            self._fight(player)
-        else:
-            self._talk(player)
-
-
-    def _fight(self, player):
-        '''
-        Compare damage, health and protectiveness
-        If player kills npc, his karma -= int(npc karma * coefficient)
-        '''
-        print(f'NPC fights you back!')
-        player.fight(self)
 
     def _die(self):
         '''
@@ -50,6 +30,9 @@ class NPC:
         print('Hello, fellow stranger!')
 
     def _set_location(self, location):
+        '''
+        Sets location
+        '''
         self.location = location
         self.game_map.npcs[location].append(self)
 
@@ -61,3 +44,9 @@ class Warrior(NPC):
     def __init__(self, name, karma, game_map):
         self.name = name
         super().__init__(karma, game_map)
+
+    def _talk(self, player):
+        '''
+        Conversation with player
+        '''
+        print('We have nothing to talk about, bruh.')

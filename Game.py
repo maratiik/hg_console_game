@@ -40,28 +40,16 @@ player.location = 'Hall'
 Ogre_flesh = Item('Ogre Flesh')
 Bone = Item('Bone')
 
-Ogre = Warrior('Ogre', -100, game_map)
+Ogre = Warrior('Ogre', -10, game_map)
 Ogre.loot = [Ogre_flesh, Bone]
 Ogre._set_location('Hall')
-
-Ogre1 = Warrior('Ogre', -100, game_map)
-Ogre1.loot = [Ogre_flesh, Bone]
-Ogre1._set_location('Hall')
-
-Ogre2 = Warrior('Ogre', -100, game_map)
-Ogre2.loot = [Ogre_flesh, Bone]
-Ogre2._set_location('Hall')
 
 player.take_item(Bone)
 player.inventory()
 player.show_loot()
 
 player.interact(Ogre)
-player.interact(Ogre1)
-player.interact(Ogre2)
 
 player.show_loot()
 player.take_item(Bone)
 print(player.xp)
-
-game_map._show_map()
