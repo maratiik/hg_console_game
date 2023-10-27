@@ -191,7 +191,7 @@ class Talents:
         self.chaos_chance_description = 'Increases chance to strike critical damage'
 
         self.potency = 0
-        self.potency_name = 'Tolerance'
+        self.potency_name = 'Potency'
         self.potency_description = 'Adds a buff to potions'
 
         self.branches = ['Fire', 'Shield', 'Weapon mastering', 'Potions']
@@ -218,6 +218,12 @@ class Talents:
         elif branch == self.branches[3]:
             print(f'---{self.branches[3]}---')
             print(f'{self.potency_name}: {self.potency} - {self.potency_description}')
+
+    def add_talent(self, talent = None):
+        '''
+        Improves chosen talent
+        '''
+        if
 
 if __name__ == '__main__':
     a = Talents()
