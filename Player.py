@@ -25,7 +25,42 @@ class Player():
         self.xp_to_level_up = 3
         self.talent_points = 0
 
+        self.talents = []
+        self.attribute_term = [1, 1, 0.1, 1, 1]
+
+        # Talents
+
+        self.talents.append(Talent('Fire aura', 0))
+        self.talents[0].description = 'Adds fire aura to your weapons, increasing your damage.'
+
+        self.talents.append(Talent('Technic', 0))
+        self.talents[1].description = 'You get better at using weapons, dealing more damage.'
+
+        self.talents.append(Talent('Shield', 1))
+        self.talents[2].description = 'Adds magic shield that protects you, increasing your health.'
+
+        self.talents.append(Talent('Chaos chance', 2))
+        self.talents[3].description = 'Your mastery over the chaos grows, increasing chance to strike critcial damage.'
+
+        self.talents.append(Talent('Chaos slice', 3))
+        self.talents[4].description = 'Empowers you to deliver strikes of critical damage.'
+
+        self.talents.append(Talent('Potency', 4))
+        self.talents[5].description = 'You master your skills at potion brewing, making it better.'
+
         print(f'Welcome to the world, {self.name}\n')
+
+    def show_stats(self):
+        '''
+        Prints stats
+        '''
+        print(f'Warrior {self.name} of level {self.level}')
+        print(f'XP: {self.xp}/{self.xp_to_level_up}')
+        print(f'Health: {self.hp}/{self.max_hp}')
+        print(f'Attack: {self.damage}')
+        print(f'Protectiveness: {self.protectiveness}')
+        print(f'Karma: {self.karma}')
+
 
     def show_map(self):
         '''
@@ -159,73 +194,78 @@ class Player():
         self.damage += 1
         self.protectiveness += 1
         self.talent_points += 1
+        self.xp_to_level_up *= 2
 
         print(f'You reached level {self.level}!')
 
+    def show_talents(self):
+        '''
+        Prints talents
+        '''
+        print('Your talents:')
+        for talent in self.talents:
+            print(f'{talent.name}: {talent.attribute} - {talent.description}')
+
+    def enhance_talent(self, talent_name):
+        '''
+        Improves a talent
+        '''
+        if self.talent_points > 0:
+            for talent in self.talents:
+                if talent.name == talent_name:
+                    if talent.type == 2 and talent.attribute == 0:
+                        print('You already are a god of chaos!')
+                    talent.attribute += self.attribute_term[talent.type]
+                    talent.update_attribute()
+                    self.talent_points -= 1
+                    print(f'You enhanced {talent.name}')
+                    return None
+            print('There is no such talent!')
+        else:
+            print('No talent points!')
 
 
-class Talents:
+class Talent:
     '''
-    Contains talents and their buffs
+    type = 0 - adds damage
+    type = 1 - adds health
+    type = 2 - adds crit chance
+    type = 3 - adds crit damage
+    type = 4 - adds potions buff
     '''
-    def __init__(self):
-        self.fire_aura = 0
-        self.fire_aura_name = 'Fire aura'
-        self.fire_aura_description = 'Adds a fire aura to the weapons, increasing damage'
+    attributes = [0, 0, 0, 0, 0]
 
-        self.shield = 0
-        self.shield_name = 'Shield'
-        self.shield_description = 'Reduces incoming damage'
-        self.absorption = 0
-        self.absorption_name = 'Absorption'
-        self.absorption_description = 'Creates a chance to not get incoming damage for an enemy'
+    def __init__(self, name, talent_type):
+        self.name = name
+        self.type = talent_type
+        self.description = ''
 
-        self.technic = 0
-        self.technic_name = 'Technic'
-        self.technic_description = 'Better weapon control, increases damage'
-        self.chaos_slice = 0
-        self.chaos_slice_name = 'Chaos slice'
-        self.chaos_slice_description = 'Increases critical damage'
-        self.chaos_chance = 0
-        self.chaos_chance_name = 'Chaos chance'
-        self.chaos_chance_description = 'Increases chance to strike critical damage'
+        # attribute adds damage/health/etc depending on the talent type
+        self.attribute = 0
 
-        self.potency = 0
-        self.potency_name = 'Potency'
-        self.potency_description = 'Adds a buff to potions'
-
-        self.branches = ['Fire', 'Shield', 'Weapon mastering', 'Potions']
-
-    def show_talent_tree(self, branch = None):
+    def update_attribute(self):
         '''
-        Prints talent tree
+        Updates attributes which are used in fights
         '''
-        if branch == None:
-            print('------'.join(self.branches))
-            print('Choose branch in parameters to see talents.')
-        elif branch == self.branches[0]:
-            print(f'---{self.branches[0]}---')
-            print(f'{self.fire_aura_name}: {self.fire_aura} - {self.fire_aura_description}')
-        elif branch == self.branches[1]:
-            print(f'---{self.branches[1]}---')
-            print(f'{self.shield_name}: {self.shield} - {self.shield_description}')
-            print(f'{self.absorption_name}: {self.absorption} - {self.absorption_description}')
-        elif branch == self.branches[2]:
-            print(f'---{self.branches[2]}---')
-            print(f'{self.technic_name}: {self.technic} - {self.technic_description}')
-            print(f'{self.chaos_slice_name}: {self.chaos_slice} - {self.chaos_slice_description}')
-            print(f'{self.chaos_chance_name}: {self.chaos_chance} - {self.chaos_chance_description}')
-        elif branch == self.branches[3]:
-            print(f'---{self.branches[3]}---')
-            print(f'{self.potency_name}: {self.potency} - {self.potency_description}')
+        type(self).attributes[self.type] = self.attribute
 
-    def add_talent(self, talent = None):
-        '''
-        Improves chosen talent
-        '''
-        if
+
 
 if __name__ == '__main__':
-    a = Talents()
-    a.show_talent_tree()
-    a.show_talent_tree(branch='Weapon mastering')
+    fire_aura = Talent('Fire aura', 0)
+    fire_aura.description = 'Adds fire aura to your weapons, increasing your damage.'
+
+    technic = Talent('Technic', 0)
+    technic.description = 'You get better at using weapons, dealing more damage.'
+
+    shield = Talent('Shield', 1)
+    shield.description = 'Adds magic shield that protects you, increasing your health.'
+
+    chaos_chance = Talent('Chaos chance', 2)
+    chaos_chance.description = 'Your mastery over the chaos grows, increasing chance to strike critcial damage.'
+
+    chaos_slice = Talent('Chaos slice', 3)
+    chaos_slice.description = 'Empowers you to deliver strikes of critical damage.'
+
+    potency = Talent('Potency', 4)
+    potency.description = 'You master your skills at potion brewing, making it better.'

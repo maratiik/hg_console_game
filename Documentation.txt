@@ -94,3 +94,33 @@ drop_item(self, item) - выкидывает предмет в комнату, �
 take_item(self, item) - берет предмет из комнаты, если таковой предмет там есть
 add_xp(self, xp) - добавляет опыт
 level_up(self) - добавляет уровень
+
+
+
+
+
+
+
+
+##### Map initialisation #####
+
+# game_map = Map()
+# game_map._add_room('name')
+# game_map._add_lock('name1', 'name2', 0/1)
+
+##### Player initialisation #####
+# player = Player('name', game_map)
+# player.location = 'location'
+# player.loot.append(item)
+
+##### NPC initialisation #####
+# NPC_name = Warrior('name', karma, game_map)
+# NPC_name.loot = [] or NPC_name.loot.append(items)
+# NPC_name.set_location('location')
+# NPC_name.health = 0
+# NPC_name.damage = 0
+
+##### Talent initialisation #####
+# Talent_name = Talent('name', talent_type)
+# Talent_name.description = 'description'
+#
