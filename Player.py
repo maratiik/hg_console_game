@@ -1,6 +1,7 @@
 import random
 
 KARMA_GAP = 100 # difference in karma when npcs start attack player
+MAX_HP = 10
 
 class Player():
     '''
@@ -13,7 +14,7 @@ class Player():
         self.karma = 0
         self.game_map = game_map
 
-        self.max_hp = 3
+        self.max_hp = MAX_HP
         self.hp = self.max_hp
         self.damage = 1
         self.protectiveness = 0
@@ -22,7 +23,7 @@ class Player():
 
         self.level = 1
         self.xp = 0
-        self.xp_to_level_up = 3
+        self.xp_to_level_up = 1
         self.talent_points = 0
 
         self.talents = []
@@ -48,65 +49,78 @@ class Player():
         self.talents.append(Talent('Potency', 4))
         self.talents[5].description = 'You master your skills at potion brewing, making it better.'
 
-        print(f'Welcome to the world, {self.name}\n')
+        print(f'\nWelcome to the world, {self.name}\n')
 
     def show_stats(self):
         '''
         Prints stats
         '''
-        print(f'Warrior {self.name} of level {self.level}')
-        print(f'XP: {self.xp}/{self.xp_to_level_up}')
-        print(f'Health: {self.hp}/{self.max_hp}')
-        print(f'Attack: {self.damage}')
-        print(f'Protectiveness: {self.protectiveness}')
-        print(f'Karma: {self.karma}')
+        print(f'''\nWarrior {self.name} of level {self.level}
+            XP: {self.xp}/{self.xp_to_level_up}
+            Health: {self.hp}/{self.max_hp}
+            Attack: {self.damage}
+            Protectiveness: {self.protectiveness}
+            Karma: {self.karma}\n''')
 
 
     def show_map(self):
         '''
         Show map
         '''
-        print(self.game_map._show_map())
+        print(f'\n{self.game_map.get_map()}\n')
 
     def show_location(self):
         '''
         Show location
         '''
-        print(f'Location is {self.location}')
+        print(f'\nLocation is {self.location}\n')
 
     def show_loot(self):
-        '''
-        Show loot in the room
-        '''
         if len(self.game_map.loot[self.location]) == 0:
-            print(f'Nothing interesting in {self.location}')
+            print(f'\nNothing interesting in {self.location}\n')
+            return None
         else:
-            print(f'Items in the {self.location}:')
+            print(f'\nItems in the {self.location}:')
         to_print = []
         for item in self.game_map.loot[self.location]:
             to_print.append(item.name)
-        print(', '.join(to_print))
+        print(f"\n{', '.join(to_print)}\n")
+
+    def show_npcs(self):
+        '''
+        Show npcs in the room
+        '''
+        if len(self.game_map.npcs[self.location]) == 0:
+            print(f'\nNothing interesting in {self.location}\n')
+            return None
+        else:
+            print(f'\nNPCs in the {self.location}:')
+            to_print = []
+            for npc in self.game_map.npcs[self.location]:
+                to_print.append(npc.name)
+            print(f"\n{', '.join(to_print)}\n")
 
     def show_inventory(self):
         '''
         Show inventory
         '''
         if len(self.loot) == 0:
-            print('Your backpack is empty')
+            print('\nYour backpack is empty\n')
         else:
-            print('Inventory:')
+            print('\nInventory:')
         to_print = []
         for item in self.loot:
             to_print.append(item.name)
-        print(', '.join(to_print))
+        print(f"{', '.join(to_print)}\n")
 
     def show_talents(self):
         '''
         Prints talents
         '''
-        print('Your talents:')
+        print('\nYour talents:')
         for talent in self.talents:
-            print(f'{talent.name}: {talent.attribute} - {talent.description}')
+            print(f"{talent.name}: {talent.attribute} - {talent.description}")
+        print(f'You have {self.talent_points} talent points.\n')
 
     def move(self, room):
         '''
@@ -114,9 +128,10 @@ class Player():
         '''
         if self.location in self.game_map.rooms[room].neighbors or room in self.game_map.rooms[self.location].neighbors:
             self.location = room
-            print(f'Moved to {room}')
+            self.game_map.player_location = room
+            print(f'\nMoved to {room}\n')
         else:
-            print(f'{room} is not the next room!')
+            print(f"\n{room} is not the next room or doesn't exist!\n")
 
     def interact(self, npc):
         '''
@@ -124,12 +139,12 @@ class Player():
         '''
         if self.location == npc.location:
             if abs(self.karma - npc.karma) >= KARMA_GAP:
-                print('FIGHT!')
+                print('\nFIGHT!\n')
                 self.fight(npc)
             else:
-                npc._talk(self)
+                npc.talk(self)
         else:
-            print('Shizoid????')
+            print('\nShizoid????\n')
 
     def fight(self, npc):
         '''
@@ -142,11 +157,11 @@ class Player():
         player_damage = self.damage + crit
         player_health = self.hp + self.protectiveness
 
-        print(f'{self.name} fights {npc.name}!')
+        print(f'\nYou attack {npc.name}!\n')
         while player_health > 0 and npc.hp > 0:
             if random.random() <= self.crit_chance:
                 crit = self.crit_damage
-                print('Critial strike!')
+                print('\nCritial strike!\n')
 
             player_damage = self.damage + crit
             player_health = self.hp + self.protectiveness
@@ -155,10 +170,10 @@ class Player():
             player_health -= npc.damage
 
         if player_health <=0:
-            print('YOU ARE DEAD.')
+            print('\nYOU ARE DEAD.\n')
         if npc.hp <= 0:
-            print(f'You have won {npc.name}')
-            npc._die()
+            print(f'\nYou killed {npc.name}\n')
+            npc.die()
             self.add_xp(npc.damage + 1)
 
     def drop_item(self, item):
@@ -167,10 +182,10 @@ class Player():
         '''
         if item in self.loot:
             self.loot.remove(item)
-            print(f'You dropped {item.name}')
+            print(f'\nYou dropped {item.name}\n')
             self.game_map.loot[self.location].append(item)
         else:
-            print(f'You don\'t have {item.name} to drop')
+            print(f'\nYou don\'t have {item.name} to drop.\n')
 
     def take_item(self, item):
         '''
@@ -180,7 +195,7 @@ class Player():
             self.loot.append(item)
             self.game_map.loot[self.location].remove(item)
         else:
-            print(f'No such item in {self.location}\n')
+            print(f'\nNo such item in {self.location}\n')
 
     def enhance_talent(self, talent_name):
         '''
@@ -190,15 +205,17 @@ class Player():
             for talent in self.talents:
                 if talent.name == talent_name:
                     if talent.type == 2 and talent.attribute == 0:
-                        print('You already are a god of chaos!')
+                        print('\nYou already are a god of chaos!\n')
+                        return None
                     talent.attribute += self.attribute_term[talent.type]
+                    ### Update player's stats
                     talent.update_attribute()
                     self.talent_points -= 1
-                    print(f'You enhanced {talent.name}')
+                    print(f'\nYou enhanced {talent.name}\n')
                     return None
-            print('There is no such talent!')
+            print('\nThere is no such talent!\n')
         else:
-            print('No talent points!')
+            print('\nNo talent points!\n')
 
     def add_xp(self, xp):
         '''
@@ -221,7 +238,7 @@ class Player():
         self.talent_points += 1
         self.xp_to_level_up *= 2
 
-        print(f'You reached level {self.level}!')
+        print(f'\nYou reached level {self.level}!\n')
 
 
 class Talent:

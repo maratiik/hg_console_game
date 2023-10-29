@@ -1,3 +1,5 @@
+from NPC import NPC
+
 class Room:
 
     '''
@@ -20,8 +22,9 @@ class Map:
         self.rooms = {}
         self.loot = {}
         self.npcs = {}
+        self.player_location = ''
 
-    def _add_room(self, room):
+    def add_room(self, room):
         '''
         Add a room to the graph
         '''
@@ -29,7 +32,7 @@ class Map:
         self.loot[room] = []
         self.npcs[room] = []
 
-    def _add_lock(self, room1, room2, locked = 0):
+    def add_lock(self, room1, room2, locked = 0):
         '''
         Add a lock to the door between rooms
         locked = 0 if door is unlocked (default)
@@ -46,9 +49,9 @@ class Map:
         #    self.rooms[room_id2].neighbors[room_id1] = self.key_id
         #    self.key_id += 1
 
-    def _show_map(self):
-        '''
-        Print map
-        '''
+    def get_map(self):
+        to_print = []
         for room in self.rooms:
-            print(f'{room}: {self.rooms[room].neighbors}')
+           to_print.append(f'{room}: {self.rooms[room].neighbors}')
+
+        return '\n'.join(to_print)

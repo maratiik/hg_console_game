@@ -1,6 +1,10 @@
 ##### Map.py #####
 
+
+
 ### class Room ###
+
+
 
 # Аттрибуты #
 
@@ -27,7 +31,11 @@ _show_map(self) - принтит карту
 
 ##### NPC.py #####
 
+
+
 ### class NPC ###
+
+
 
 # Аттрибуты #
 
@@ -50,15 +58,25 @@ _die(self) - протокол смерти npc, он пропадает из к�
 _talk(self, player) - протокол разговора
 _set_location(self, location) - меняет локацию
 
+
+
 ### class Warrior ###
+
+
 
 # Аттрибуты #
 
 name - str, имя
 
+
+
 ##### Player.py #####
 
+
+
 ### class Player ###
+
+
 
 # Постоянные #
 
@@ -106,7 +124,11 @@ enhance_talent(self, talent_name) - прокачивает талант
 add_xp(self, xp) - добавляет опыт
 level_up(self) - добавляет уровень
 
+
+
 ### class Talent ###
+
+
 
 # Аттрибуты #
 
@@ -148,4 +170,6 @@ update_attribute(self) - обновляет аттрибут
 ##### Talent initialisation #####
 # Talent_name = Talent('name', talent_type)
 # Talent_name.description = 'description'
-#
+
+##### Item initialisation #####
+Item_name = Item('name')
