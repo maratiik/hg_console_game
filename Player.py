@@ -68,6 +68,46 @@ class Player():
         '''
         print(self.game_map._show_map())
 
+    def show_location(self):
+        '''
+        Show location
+        '''
+        print(f'Location is {self.location}')
+
+    def show_loot(self):
+        '''
+        Show loot in the room
+        '''
+        if len(self.game_map.loot[self.location]) == 0:
+            print(f'Nothing interesting in {self.location}')
+        else:
+            print(f'Items in the {self.location}:')
+        to_print = []
+        for item in self.game_map.loot[self.location]:
+            to_print.append(item.name)
+        print(', '.join(to_print))
+
+    def show_inventory(self):
+        '''
+        Show inventory
+        '''
+        if len(self.loot) == 0:
+            print('Your backpack is empty')
+        else:
+            print('Inventory:')
+        to_print = []
+        for item in self.loot:
+            to_print.append(item.name)
+        print(', '.join(to_print))
+
+    def show_talents(self):
+        '''
+        Prints talents
+        '''
+        print('Your talents:')
+        for talent in self.talents:
+            print(f'{talent.name}: {talent.attribute} - {talent.description}')
+
     def move(self, room):
         '''
         Move to the room if neighbor
@@ -77,13 +117,6 @@ class Player():
             print(f'Moved to {room}')
         else:
             print(f'{room} is not the next room!')
-
-
-    def show_location(self):
-        '''
-        Show location
-        '''
-        print(f'Location is {self.location}')
 
     def interact(self, npc):
         '''
@@ -110,7 +143,7 @@ class Player():
         player_health = self.hp + self.protectiveness
 
         print(f'{self.name} fights {npc.name}!')
-        while player_health > 0 and npc.health > 0:
+        while player_health > 0 and npc.hp > 0:
             if random.random() <= self.crit_chance:
                 crit = self.crit_damage
                 print('Critial strike!')
@@ -118,41 +151,15 @@ class Player():
             player_damage = self.damage + crit
             player_health = self.hp + self.protectiveness
 
-            npc.health -= player_damage
+            npc.hp -= player_damage
             player_health -= npc.damage
 
         if player_health <=0:
             print('YOU ARE DEAD.')
-        if npc.health <= 0:
+        if npc.hp <= 0:
             print(f'You have won {npc.name}')
             npc._die()
             self.add_xp(npc.damage + 1)
-
-    def show_loot(self):
-        '''
-        Show loot in the room
-        '''
-        if len(self.game_map.loot[self.location]) == 0:
-            print(f'Nothing interesting in {self.location}')
-        else:
-            print(f'Items in the {self.location}:')
-        to_print = []
-        for item in self.game_map.loot[self.location]:
-            to_print.append(item.name)
-        print(', '.join(to_print))
-
-    def inventory(self):
-        '''
-        Show inventory
-        '''
-        if len(self.loot) == 0:
-            print('Your backpack is empty')
-        else:
-            print('Inventory:')
-        to_print = []
-        for item in self.loot:
-            to_print.append(item.name)
-        print(', '.join(to_print))
 
     def drop_item(self, item):
         '''
@@ -174,6 +181,24 @@ class Player():
             self.game_map.loot[self.location].remove(item)
         else:
             print(f'No such item in {self.location}\n')
+
+    def enhance_talent(self, talent_name):
+        '''
+        Improves a talent
+        '''
+        if self.talent_points > 0:
+            for talent in self.talents:
+                if talent.name == talent_name:
+                    if talent.type == 2 and talent.attribute == 0:
+                        print('You already are a god of chaos!')
+                    talent.attribute += self.attribute_term[talent.type]
+                    talent.update_attribute()
+                    self.talent_points -= 1
+                    print(f'You enhanced {talent.name}')
+                    return None
+            print('There is no such talent!')
+        else:
+            print('No talent points!')
 
     def add_xp(self, xp):
         '''
@@ -197,32 +222,6 @@ class Player():
         self.xp_to_level_up *= 2
 
         print(f'You reached level {self.level}!')
-
-    def show_talents(self):
-        '''
-        Prints talents
-        '''
-        print('Your talents:')
-        for talent in self.talents:
-            print(f'{talent.name}: {talent.attribute} - {talent.description}')
-
-    def enhance_talent(self, talent_name):
-        '''
-        Improves a talent
-        '''
-        if self.talent_points > 0:
-            for talent in self.talents:
-                if talent.name == talent_name:
-                    if talent.type == 2 and talent.attribute == 0:
-                        print('You already are a god of chaos!')
-                    talent.attribute += self.attribute_term[talent.type]
-                    talent.update_attribute()
-                    self.talent_points -= 1
-                    print(f'You enhanced {talent.name}')
-                    return None
-            print('There is no such talent!')
-        else:
-            print('No talent points!')
 
 
 class Talent:
@@ -248,24 +247,3 @@ class Talent:
         Updates attributes which are used in fights
         '''
         type(self).attributes[self.type] = self.attribute
-
-
-
-if __name__ == '__main__':
-    fire_aura = Talent('Fire aura', 0)
-    fire_aura.description = 'Adds fire aura to your weapons, increasing your damage.'
-
-    technic = Talent('Technic', 0)
-    technic.description = 'You get better at using weapons, dealing more damage.'
-
-    shield = Talent('Shield', 1)
-    shield.description = 'Adds magic shield that protects you, increasing your health.'
-
-    chaos_chance = Talent('Chaos chance', 2)
-    chaos_chance.description = 'Your mastery over the chaos grows, increasing chance to strike critcial damage.'
-
-    chaos_slice = Talent('Chaos slice', 3)
-    chaos_slice.description = 'Empowers you to deliver strikes of critical damage.'
-
-    potency = Talent('Potency', 4)
-    potency.description = 'You master your skills at potion brewing, making it better.'

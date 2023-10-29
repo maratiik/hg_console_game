@@ -9,10 +9,6 @@ neighbors - dict, соседи комнаты, в key лежит комната,
 в value лежит dict, в котором key - сосед, а value - 0/i,
 0 - int, комната закрыта, i - открыта (нужен ключ i для открытия)
 
-# Методы #
-
-__init__(self, room_id) - создает карту
-
 ### class Map ###
 
 # Аттрибуты #
@@ -45,7 +41,7 @@ karma - int, карма:
 loot - list, снаряжение NPC
 location - str, локация на карте
 game_map - игровая карта
-health - int, здоровье
+hp - int, здоровье
 damage - int, урон
 
 # Методы #
@@ -62,7 +58,11 @@ name - str, имя
 
 ##### Player.py #####
 
-# class Player #
+### class Player ###
+
+# Постоянные #
+
+KARMA_GAP = 100 - разница в карме, при которой npc атакует без разговоров
 
 # Аттрибуты #
 
@@ -81,19 +81,44 @@ level - int, уровень
 xp - int, текущий опыт
 xp_to_level_up - int, опыт, необходимый для получения нового уровня
 talent_points - int, количество непотраченных очков таланта
+talents - list, таланты
+attribute_term - list, [int, int, float, int, int], слагаемые аттрибутов талантов, распределенные по типам:
+0 - плюс к дамагу
+1 - плюс к здоровью
+2 - плюс к шансу крита
+3 - плюс к крит дамагу
+4 - плюс к баффу зелий
+Когда талант прокачивается, к нему добавляется attribute_term в зависимости от типа.
 
 # Методы #
+show_stats(self) - принтит статы
 show_map(self) - принтит карту
-move(self, room) - перемещает игрока в комнату, если она является соседней
 show_location(self) - принтит текущую локацию
+show_loot(self) - принтит лут в комнате
+show_inventory(self) - принтит инвентарь
+show_talents(self) - принтит таланты
+move(self, room) - перемещает игрока в комнату, если она является соседней
 interact(self, npc) - взаимодействует с npc, если он находится в той же комнате, что и игрок
 fight(self, npc) - атакует npc
-show_loot(self) - принтит лут в комнате
-inventory(self) - принтит инвентарь
 drop_item(self, item) - выкидывает предмет в комнату, если таковой предмет есть в инвентаре
 take_item(self, item) - берет предмет из комнаты, если таковой предмет там есть
+enhance_talent(self, talent_name) - прокачивает талант
 add_xp(self, xp) - добавляет опыт
 level_up(self) - добавляет уровень
+
+### class Talent ###
+
+# Аттрибуты #
+
+attributes - list, [0, 0, 0, 0, 0], здесь хранятся уровни талантов
+name - str, название таланта
+type - int, тип таланта (см. attribute_term)
+description - str, описание таланта
+attribute - int/float, уровень таланта
+
+# Методы #
+
+update_attribute(self) - обновляет аттрибут
 
 
 

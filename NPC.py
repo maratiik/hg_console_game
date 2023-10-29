@@ -8,7 +8,7 @@ class NPC:
         self.location = ''
         self.game_map = game_map
 
-        self.health = 0 # health of NPC
+        self.hp = 0 # health of NPC
         self.damage = 0 # damage of NPC
         print('NPC has arrived!\n')
 
@@ -27,7 +27,7 @@ class NPC:
         '''
         Interaction
         '''
-        print('Hello, fellow stranger!')
+        print(f'Hello, {player.name}')
 
     def _set_location(self, location):
         '''
@@ -49,4 +49,4 @@ class Warrior(NPC):
         '''
         Conversation with player
         '''
-        print('We have nothing to talk about, bruh.')
+        print(f'We have nothing to talk about, {player.name}.')
