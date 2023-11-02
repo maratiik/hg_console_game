@@ -20,6 +20,7 @@ class Player():
         self.protectiveness = 0
         self.crit_chance = 0
         self.crit_damage = 0
+        self.potency = 0
 
         self.level = 1
         self.xp = 0
@@ -201,21 +202,31 @@ class Player():
         '''
         Improves a talent
         '''
-        if self.talent_points > 0:
-            for talent in self.talents:
-                if talent.name == talent_name:
-                    if talent.type == 2 and talent.attribute == 0:
-                        print('\nYou already are a god of chaos!\n')
-                        return None
-                    talent.attribute += self.attribute_term[talent.type]
-                    ### Update player's stats
-                    talent.update_attribute()
-                    self.talent_points -= 1
-                    print(f'\nYou enhanced {talent.name}\n')
-                    return None
-            print('\nThere is no such talent!\n')
-        else:
+        if self.talent_points == 0:
             print('\nNo talent points!\n')
+            return None
+        for talent in self.talents:
+            if talent_name == talent.name:
+                talent.attribute += self.attribute_term[talent.type]
+                self.update_talent_stats(talent)
+                talent.update_attribute()
+                self.talent_points -= 1
+                print(f'\nYou enhanced {talent.name}\n')
+                return None
+        print('\nThere is no such talent!\n')
+
+    def update_talent_stats(self, talent):
+        if talent.type == 0:
+            self.damage += self.attribute_term[0]
+        elif talent.type == 1:
+            self.max_hp += self.attribute_term[1]
+        elif talent.type == 2:
+            self.crit_chance += self.attribute_term[2]
+        elif talent.type == 3:
+            self.crit_damage += self.attribute_term[3]
+        elif talent.type == 4:
+            self.potency += self.attribute_term[4]
+
 
     def add_xp(self, xp):
         '''
