@@ -53,9 +53,6 @@ class Player():
         print(f'\nWelcome to the world, {self.name}\n')
 
     def show_stats(self):
-        '''
-        Prints stats
-        '''
         print(f'''\nWarrior {self.name} of level {self.level}
             XP: {self.xp}/{self.xp_to_level_up}
             Health: {self.hp}/{self.max_hp}
@@ -65,15 +62,9 @@ class Player():
 
 
     def show_map(self):
-        '''
-        Show map
-        '''
         print(f'\n{self.game_map.get_map()}\n')
 
     def show_location(self):
-        '''
-        Show location
-        '''
         print(f'\nLocation is {self.location}\n')
 
     def show_loot(self):
@@ -88,9 +79,6 @@ class Player():
         print(f"\n{', '.join(to_print)}\n")
 
     def show_npcs(self):
-        '''
-        Show npcs in the room
-        '''
         if len(self.game_map.npcs[self.location]) == 0:
             print(f'\nNothing interesting in {self.location}\n')
             return None
@@ -102,9 +90,6 @@ class Player():
             print(f"\n{', '.join(to_print)}\n")
 
     def show_inventory(self):
-        '''
-        Show inventory
-        '''
         if len(self.loot) == 0:
             print('\nYour backpack is empty\n')
         else:
@@ -115,18 +100,12 @@ class Player():
         print(f"{', '.join(to_print)}\n")
 
     def show_talents(self):
-        '''
-        Prints talents
-        '''
         print('\nYour talents:')
         for talent in self.talents:
             print(f"{talent.name}: {talent.attribute} - {talent.description}")
         print(f'You have {self.talent_points} talent points.\n')
 
     def move(self, room):
-        '''
-        Move to the room if neighbor
-        '''
         if self.location in self.game_map.rooms[room].neighbors or room in self.game_map.rooms[self.location].neighbors:
             self.location = room
             self.game_map.player_location = room
@@ -135,9 +114,6 @@ class Player():
             print(f"\n{room} is not the next room or doesn't exist!\n")
 
     def interact(self, npc):
-        '''
-        Interact with npc
-        '''
         if self.location == npc.location:
             if abs(self.karma - npc.karma) >= KARMA_GAP:
                 print('\nFIGHT!\n')
@@ -148,9 +124,6 @@ class Player():
             print('\nShizoid????\n')
 
     def fight(self, npc):
-        '''
-        Attack npc
-        '''
         self.karma -= npc.karma // 2
 
         crit = 0
@@ -178,9 +151,6 @@ class Player():
             self.add_xp(npc.damage + 1)
 
     def drop_item(self, item):
-        '''
-        Drop an item
-        '''
         if item in self.loot:
             self.loot.remove(item)
             print(f'\nYou dropped {item.name}\n')
@@ -189,9 +159,6 @@ class Player():
             print(f'\nYou don\'t have {item.name} to drop.\n')
 
     def take_item(self, item):
-        '''
-        Take an item from room
-        '''
         if item in self.game_map.loot[self.location]:
             self.loot.append(item)
             self.game_map.loot[self.location].remove(item)
